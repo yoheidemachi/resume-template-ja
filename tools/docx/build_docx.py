@@ -16,7 +16,6 @@ pandoc の既定 reference.docx は pgSz/pgMar を持たないため Word が US
 import re
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -293,16 +292,15 @@ def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
     md = hard_breaks(convert_tables(src.read_text(encoding="utf-8")))
 
-    with tempfile.NamedTemporaryFile("w", suffix=".md", encoding="utf-8", delete=False) as f:
-        f.write(md)
-        tmp = f.name
-
+    # ★経歴書の中身を一時ファイルに書き出さない（氏名・勤務先の写しを残さないため）。
+    #   pandoc には標準入力で渡す。
     # 🛑east_asian_line_breaks を付けないと、grid table のセル内の折り返し位置に
     #   pandoc が半角スペースを入れ、「本番ロー ンチ」「アクセ ス」のように語が割れる
     subprocess.run(
-        ["pandoc", tmp, "-f", "markdown+east_asian_line_breaks", "-t", "docx",
+        ["pandoc", "-f", "markdown+east_asian_line_breaks", "-t", "docx",
          f"--lua-filter={Path(__file__).with_name('cjk_softbreak.lua')}",
          f"--reference-doc={REFERENCE}", "-o", str(dst)],
+        input=md, text=True, encoding="utf-8",
         check=True,
     )
     align_header(dst)
