@@ -1,0 +1,115 @@
+/* 職務経歴書（日本語・長文） — weasyprint 用 */
+
+@page {
+  size: A4;
+  margin: 15mm 14mm;
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-family: "Hiragino Kaku Gothic Pro", "Yu Gothic", "Noto Sans CJK JP", sans-serif;
+    font-size: 8pt;
+    color: #888;
+  }
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic Pro", "Hiragino Sans", "Yu Gothic", "Noto Sans CJK JP", "Noto Sans JP", sans-serif;
+  font-size: 9.2pt;
+  line-height: 1.55;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+h1 {
+  font-size: 16pt;
+  letter-spacing: 2px;
+  margin: 0 0 4px 0;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #333;
+}
+
+h2 {
+  font-size: 10.5pt;
+  color: #000;
+  border-bottom: 1.1px solid #555;
+  padding-bottom: 2px;
+  margin: 14px 0 6px 0;
+  page-break-after: avoid;
+}
+
+/* 会社名（### 1. 〇〇株式会社） */
+h3 {
+  font-size: 10.5pt;
+  margin: 14px 0 5px 0;
+  padding: 3px 0 3px 7px;
+  background: #f2f2f2;
+  border-left: 3px solid #444;
+  page-break-after: avoid;
+}
+
+/* ★ブロック見出し（プロジェクト概要／主な業務内容／技術スタック／成果・実績）
+   本文中の太字と見分けがつくよう、字下げなし・字間を空けた小さめの見出しにする */
+h4 {
+  font-size: 8.8pt;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  color: #444;
+  margin: 10px 0 3px 0;
+  padding-bottom: 1.5px;
+  border-bottom: 0.7px solid #bbb;
+  page-break-after: avoid;
+}
+
+/* ★小見出し（計装・オブザーバビリティ／テスト・品質担保 等） */
+h5 {
+  font-size: 9pt;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 8px 0 2px 0;
+  padding-left: 6px;
+  border-left: 2.5px solid #999;
+  page-break-after: avoid;
+}
+
+hr { display: none; }
+
+p { margin: 4px 0; }
+
+/* 「*計装・オブザーバビリティ（主軸）*」のような小見出し */
+/* 斜体は補足として控えめに（小見出しは h5 に移したのでここでは強調しない） */
+em { font-style: normal; color: #555; }
+
+/* pandoc の <col style="width:33%"> を無効化 */
+colgroup, col { width: auto !important; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 5px 0 10px 0;
+  font-size: 8.6pt;
+}
+
+th, td {
+  border: 0.8px solid #aaa;
+  padding: 3px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th { background: #f0f0f0; font-weight: 600; }
+tr { page-break-inside: avoid; }
+
+ul { margin: 4px 0 7px 0; padding-left: 16px; }
+li { margin-bottom: 3px; line-height: 1.55; }
+
+/* 本文中の強調。見出し（グレー・字間広め）と区別するため、真っ黒＋太めにする */
+strong { font-weight: 700; color: #000; letter-spacing: 0; }
+code { font-family: "SF Mono", Menlo, monospace; font-size: 8.6pt; }
+a { color: #1a4d80; text-decoration: none; }
+
+/* 会社ごとの概要表（h3 直後）はページをまたがせない。表頭が次ページで繰り返され「期間」が二重に見えるため。
+   見出し＋前置き1行だけがページ末に取り残されないよう、h3 直後の段落は次の要素と離さない */
+h3 + table { page-break-inside: avoid; break-inside: avoid; }
+h3 + p { page-break-after: avoid; break-after: avoid; }
+
+/* タイトル直下の記入日と氏名は右寄せ */
+h1 + p, h1 + p + p { text-align: right; }
